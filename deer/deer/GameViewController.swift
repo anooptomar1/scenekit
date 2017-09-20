@@ -22,13 +22,18 @@ class GameViewController: UIViewController {
         
         if let view = sceneView {
             view.scene = scene
+            // set the class for the rendering update functions that need to be run
+            view.delegate = scene
+            // for the game loop
+            view.isPlaying = true
             view.showsStatistics = true
             view.backgroundColor = UIColor(
                 red: 0xc9/255.0,
                 green: 0xfc/255.0,
                 blue: 0xfb/255.0,
                 alpha: 1)
-            view.antialiasingMode = .multisampling4X
+            // do not do this on a simulator!
+//            view.antialiasingMode = .multisampling4X
         }
     }
     

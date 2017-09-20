@@ -10,7 +10,10 @@ import UIKit
 import QuartzCore
 import SceneKit
 
-class GameScene: SCNScene {
+class GameScene: SCNScene, SCNSceneRendererDelegate {
+    var iRotation = 0
+    var deer = SCNNode()
+    
     convenience init(create: Bool) {
         self.init()
         
@@ -62,25 +65,43 @@ class GameScene: SCNScene {
         // load the deer
         let deerScene = SCNScene(named: "art.scnassets/Deer.dae")
         if let deerSceneUnwrapped = deerScene {
-            let deer = deerSceneUnwrapped.rootNode.childNode(withName: "Deer", recursively: true)
+            deer = deerSceneUnwrapped.rootNode.childNode(withName: "Deer", recursively: true)!
             
-            if let deerNode = deer {
-                deerNode.rotation = SCNVector4(
-                    x: 0,
-                    y: 1,
-                    z: 0,
-                    w: Float(-Double.pi / 4)
-                )
-                
-                // wrapper for scaling
-                let nodeWrapper = SCNNode()
-                nodeWrapper.scale = SCNVector3(2,2,2)
-                nodeWrapper.addChildNode(deerNode)
-                rootNode.addChildNode(nodeWrapper)
-            }
+            
+            deer.rotation = SCNVector4(
+                x: 0,
+                y: 1,
+                z: 0,
+                w: Float(-Double.pi / 4)
+            )
+            
+            // wrapper for scaling
+            let nodeWrapper = SCNNode()
+            nodeWrapper.scale = SCNVector3(2,2,2)
+            nodeWrapper.addChildNode(deer)
+            rootNode.addChildNode(nodeWrapper)
+            
         }
     }
     
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        // this is game loop!
+        let rotationAbout = Float(Double(iRotation) / 360.0) * Float(Double.pi * 2)
+        
+        deer.rotation = SCNVector4(
+            x: 0,
+            y: 1,
+            z: 0,
+            w: -rotationAbout
+        )
+        
+        if iRotation < 360 {
+            iRotation += 1
+        } else {
+            iRotation = 0
+        }
+        
+    }
     
 }
 
