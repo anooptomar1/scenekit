@@ -11,8 +11,10 @@ import QuartzCore
 import SceneKit
 
 class GameScene: SCNScene, SCNSceneRendererDelegate {
-    var iRotation = 0
     var deer = SCNNode()
+    var timeLast: Double?
+    var previousRotation = 0.0
+    var rotationConstant = 0.6
     
     convenience init(create: Bool) {
         self.init()
@@ -86,21 +88,27 @@ class GameScene: SCNScene, SCNSceneRendererDelegate {
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         // this is game loop!
-        let rotationAbout = Float(Double(iRotation) / 360.0) * Float(Double.pi * 2)
+        let dt: Double
+        
+        if let lt = timeLast {
+            dt = time - lt
+        } else {
+            dt = 0
+        }
+        
+        let rotationAbout = (rotationConstant * dt) + previousRotation
+        previousRotation = rotationAbout
         
         deer.rotation = SCNVector4(
             x: 0,
             y: 1,
             z: 0,
-            w: -rotationAbout
+            w: Float(-rotationAbout)
         )
         
-        if iRotation < 360 {
-            iRotation += 1
-        } else {
-            iRotation = 0
-        }
+        timeLast = time
         
+        print("\(dt * 1000)")
     }
     
 }

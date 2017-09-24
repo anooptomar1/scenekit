@@ -16,6 +16,7 @@
 		7F2AC6F21F71AA920078478B /* deerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2AC6F11F71AA920078478B /* deerTests.swift */; };
 		7F2AC6FD1F71AA920078478B /* deerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2AC6FC1F71AA920078478B /* deerUITests.swift */; };
 		7F2AC70B1F71ACC10078478B /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2AC70A1F71ACC10078478B /* GameScene.swift */; };
+		7F767CA41F730AAF00B6C087 /* myScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 7F767CA31F730AAF00B6C087 /* myScene.scn */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		7F2AC6FC1F71AA920078478B /* deerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = deerUITests.swift; sourceTree = "<group>"; };
 		7F2AC6FE1F71AA920078478B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F2AC70A1F71ACC10078478B /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		7F767CA31F730AAF00B6C087 /* myScene.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = myScene.scn; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				7F2AC6E51F71AA920078478B /* LaunchScreen.storyboard */,
 				7F2AC6E81F71AA920078478B /* Info.plist */,
 				7F2AC70A1F71ACC10078478B /* GameScene.swift */,
+				7F767CA31F730AAF00B6C087 /* myScene.scn */,
 			);
 			path = deer;
 			sourceTree = "<group>";
@@ -243,6 +246,7 @@
 			files = (
 				7F2AC6DD1F71AA920078478B /* art.scnassets in Resources */,
 				7F2AC6E71F71AA920078478B /* LaunchScreen.storyboard in Resources */,
+				7F767CA41F730AAF00B6C087 /* myScene.scn in Resources */,
 				7F2AC6E41F71AA920078478B /* Assets.xcassets in Resources */,
 				7F2AC6E21F71AA920078478B /* Main.storyboard in Resources */,
 			);
@@ -526,6 +530,7 @@
 				7F2AC7031F71AA920078478B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7F2AC7041F71AA920078478B /* Build configuration list for PBXNativeTarget "deerTests" */ = {
 			isa = XCConfigurationList;
@@ -534,6 +539,7 @@
 				7F2AC7061F71AA920078478B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7F2AC7071F71AA920078478B /* Build configuration list for PBXNativeTarget "deerUITests" */ = {
 			isa = XCConfigurationList;
@@ -542,6 +548,7 @@
 				7F2AC7091F71AA920078478B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
