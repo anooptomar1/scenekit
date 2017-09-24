@@ -35,6 +35,23 @@ class PianoScene: SCNScene {
         let whiteKeyArray = [
             "C", "D", "E", "F", "G", "A", "B", "CHi"
         ]
+        let blackKeys = [
+            "CSharp",
+            "GSharp",
+            "FSharp",
+            "DSharp",
+            "ASharp"
+        ]
+        let materialWhite = SCNMaterial()
+        materialWhite.diffuse.contents = UIColor(white: 0.8, alpha: 1)
+        materialWhite.specular.contents = UIColor.white
+        materialWhite.emission.contents = UIColor.black
+        
+        let materialBlack = SCNMaterial()
+        materialBlack.diffuse.contents = UIColor(white: 0.1, alpha: 1)
+        materialBlack.specular.contents = UIColor.white
+        materialBlack.emission.contents = UIColor.black
+        
         for index in 0..<whiteKeyArray.count {
             let pianoKey = whitePianoKey?.clone()
             pianoKey?.geometry = whitePianoKey?.geometry?.copy() as? SCNGeometry
@@ -42,29 +59,26 @@ class PianoScene: SCNScene {
             let xPos = -2.0 + (0.65  * Double(index))
             pianoKey?.position = SCNVector3(xPos, 0, 0)
             
-            let materialWhite = SCNMaterial()
-            materialWhite.diffuse.contents = UIColor(white: 0.8, alpha: 1)
-            materialWhite.specular.contents = UIColor.white
-            materialWhite.emission.contents = UIColor.black
             
             pianoKey?.geometry?.firstMaterial = materialWhite
             
             keysAttach.addChildNode(pianoKey!)
         }
         
+        for index in 0..<blackKeys.count {
+            let moveFactor = index < 2 ? -1.7 : -1.05
+            let xpos = moveFactor + (0.65 * Double(index))
+            
+            let key = blackPianoKey?.clone()
+            key?.geometry = blackPianoKey?.geometry?.copy() as? SCNGeometry
+            key?.name = blackKeys[index]
+            key?.position = SCNVector3(xpos, -0.4, 0.7)
+            
+            key?.geometry?.firstMaterial = materialBlack
+            
+            keysAttach.addChildNode(key!)
+        }
         
-        
-//        let newWhiteKeyClone = whitePianoKey?.clone()
-//        newWhiteKeyClone?.geometry = whitePianoKey?.geometry!.copy() as? SCNGeometry
-//
-//        let materialWhite = SCNMaterial()
-//        materialWhite.diffuse.contents = UIColor.white
-//        materialWhite.specular.contents = UIColor.white
-//        materialWhite.emission.contents = UIColor.black
-//
-//        newWhiteKeyClone?.geometry!.firstMaterial = materialWhite
-//
-//        keysAttach.addChildNode(newWhiteKeyClone!)
     }
     
     func setupCameraAndLights() {
