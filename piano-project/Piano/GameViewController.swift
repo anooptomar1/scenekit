@@ -21,7 +21,8 @@ class GameViewController: UIViewController {
         
         sceneView = self.view as? SCNView
         if let view = sceneView {
-            
+//            view.allowsCameraControl = true
+//            view.showsStatistics = true
             view.scene = scene
             view.backgroundColor = UIColor.gray
             
@@ -52,13 +53,36 @@ class GameViewController: UIViewController {
                 // get its material
                 let material = key.geometry!.firstMaterial!
                 player.playKey(keyName: name)
-                // highlight it
                 
+                // about to start a animation
+                SCNTransaction.begin()
+                SCNTransaction.animationDuration = 0.0
                 
-                //THIS IS WHERE YOU HANDLE THE SCNTRANSACTION
-                /////////////////////////////////////////////
+                SCNTransaction.completionBlock = {
+                    SCNTransaction.begin()
+                    SCNTransaction.animationDuration = 0.5
+                    
+                    material.emission.contents = UIColor.black
+                    
+                    key.position = SCNVector3(
+                        key.position.x,
+                        key.position.y - 0.2,
+                        key.position.z
+                    )
+                    
+                    SCNTransaction.commit()
+                }
+                // set color to red
+                material.emission.contents = UIColor.red
                 
+                // move it down
+                key.position = SCNVector3(
+                    key.position.x,
+                    key.position.y + 0.2,
+                    key.position.z
+                )
                 
+                SCNTransaction.commit()
                 
             }
         }

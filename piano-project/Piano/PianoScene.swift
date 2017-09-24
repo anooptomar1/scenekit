@@ -42,15 +42,6 @@ class PianoScene: SCNScene {
             "DSharp",
             "ASharp"
         ]
-        let materialWhite = SCNMaterial()
-        materialWhite.diffuse.contents = UIColor(white: 0.8, alpha: 1)
-        materialWhite.specular.contents = UIColor.white
-        materialWhite.emission.contents = UIColor.black
-        
-        let materialBlack = SCNMaterial()
-        materialBlack.diffuse.contents = UIColor(white: 0.1, alpha: 1)
-        materialBlack.specular.contents = UIColor.white
-        materialBlack.emission.contents = UIColor.black
         
         for index in 0..<whiteKeyArray.count {
             let pianoKey = whitePianoKey?.clone()
@@ -59,6 +50,10 @@ class PianoScene: SCNScene {
             let xPos = -2.0 + (0.65  * Double(index))
             pianoKey?.position = SCNVector3(xPos, 0, 0)
             
+            let materialWhite = SCNMaterial()
+            materialWhite.diffuse.contents = UIColor(white: 0.8, alpha: 1)
+            materialWhite.specular.contents = UIColor.white
+            materialWhite.emission.contents = UIColor.black
             
             pianoKey?.geometry?.firstMaterial = materialWhite
             
@@ -74,6 +69,11 @@ class PianoScene: SCNScene {
             key?.name = blackKeys[index]
             key?.position = SCNVector3(xpos, -0.4, 0.7)
             
+            let materialBlack = SCNMaterial()
+            materialBlack.diffuse.contents = UIColor(white: 0.1, alpha: 1)
+            materialBlack.specular.contents = UIColor.white
+            materialBlack.emission.contents = UIColor.black 
+            
             key?.geometry?.firstMaterial = materialBlack
             
             keysAttach.addChildNode(key!)
@@ -86,6 +86,7 @@ class PianoScene: SCNScene {
         let emptyZero = SCNNode()
         emptyZero.position = SCNVector3Zero
         rootNode.addChildNode(emptyZero)
+        
         
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()

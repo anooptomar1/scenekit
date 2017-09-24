@@ -112,6 +112,7 @@
 				TargetAttributes = {
 					5E9661AB1BE8838E002B8FD9 = {
 						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = WMQYY9222D;
 					};
 				};
 			};
@@ -286,10 +287,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = WMQYY9222D;
 				INFOPLIST_FILE = Piano/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = co.megaplex.Piano;
+				PRODUCT_BUNDLE_IDENTIFIER = com.garethfuller.piano;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};
@@ -299,10 +301,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = WMQYY9222D;
 				INFOPLIST_FILE = Piano/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = co.megaplex.Piano;
+				PRODUCT_BUNDLE_IDENTIFIER = com.garethfuller.piano;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};
