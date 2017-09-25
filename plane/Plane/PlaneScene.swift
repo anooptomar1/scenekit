@@ -18,6 +18,8 @@ class PlaneScene: SCNScene, SCNSceneRendererDelegate {
     let speedConstant = 1.5
     var planeLocationRotation: Double = 0.0
     
+    var obsticles =  Obsticles()
+    
     convenience init(create: Bool) {
         self.init()
         
@@ -39,6 +41,12 @@ class PlaneScene: SCNScene, SCNSceneRendererDelegate {
         
         
         rootNode.addChildNode(planeAttatch)
+        
+        let rotationAction = SCNAction.rotate(by: CGFloat(Double.pi * 2), around: SCNVector3(0,0,1), duration: 0.3)
+        let rotateForever = SCNAction.repeatForever(rotationAction)
+        propella?.runAction(rotateForever)
+        
+        obsticles.spawnObsticle(node: rootNode)
     }
     
     // GAME LOOP
