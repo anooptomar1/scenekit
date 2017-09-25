@@ -13,6 +13,10 @@ import SceneKit
 class PlaneScene: SCNScene, SCNSceneRendererDelegate {
     
     let planeAttatch = SCNNode()
+    // when ws the last frame run and the diff in time
+    var timeLast: Double?
+    let speedConstant = 1.5
+    var planeLocationRotation: Double = 0.0
     
     convenience init(create: Bool) {
         self.init()
@@ -35,6 +39,41 @@ class PlaneScene: SCNScene, SCNSceneRendererDelegate {
         
         
         rootNode.addChildNode(planeAttatch)
+    }
+    
+    // GAME LOOP
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        
+        // account for diff in time
+        var dt: Double
+        
+        if let lt = timeLast {
+            dt = time - lt
+        } else {
+            dt = 0
+        }
+        
+        timeLast = time
+        
+        // variable for incrementing in with a factor of speed
+        planeLocationRotation += dt * speedConstant
+        
+        // get the gental effect of plane using triggernomitory
+        // we do this using a sign wave to go from one value to another
+        // sign in swift works in radions
+        
+        // get a y
+        let yPos = (sin(planeLocationRotation) / 4.0)
+        let planeRotation = (cos(planeLocationRotation) / 4.0)
+        
+        planeAttatch.position = SCNVector3(0, Float(yPos), 0)
+        planeAttatch.rotation = SCNVector4(1, 0, 0, Float(planeRotation))
+        
+        // stop the plane rotation location variable getting to large
+        // unnecessarily
+        if planeLocationRotation > .pi * 2 {
+            planeLocationRotation -= (.pi * 2)
+        }
     }
     
     func setupCameraLightsAndExtras() {
