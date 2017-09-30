@@ -24,7 +24,7 @@ class Obsticles {
         orangeObject = (geometry?.rootNode.childNode(withName: "Orange", recursively: true))!
         redObject = (geometry?.rootNode.childNode(withName: "Red", recursively: true))!
         
-        moveAction = SCNAction.moveBy(x: 0, y: 0, z: 50, duration: 5)
+        moveAction = SCNAction.moveBy(x: 0, y: 0, z: 60, duration: 5)
     }
     
     func spawnObsticle(node: SCNNode) {
@@ -53,6 +53,8 @@ class Obsticles {
         }
         
         obsticle.position = vector
+        obsticle.opacity = 0
+        obsticle.name = "obsticle"
         
         node.addChildNode(obsticle)
         
@@ -60,6 +62,13 @@ class Obsticles {
     }
     
     func moveObjectPastCam(onNode node: SCNNode) {
-        node.runAction(moveAction)
+        let opactiyAction = SCNAction.fadeOpacity(to: 1, duration: 0.5)
+        
+        let groupAction = SCNAction.group([moveAction, opactiyAction])
+        
+        // move the nodes and remove from the screen
+        let moveRemoveSequence = SCNAction.sequence([groupAction, SCNAction.removeFromParentNode()])
+        
+        node.runAction(moveRemoveSequence)
     }
 }

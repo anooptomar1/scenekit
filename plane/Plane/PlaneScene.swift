@@ -46,7 +46,22 @@ class PlaneScene: SCNScene, SCNSceneRendererDelegate {
         let rotateForever = SCNAction.repeatForever(rotationAction)
         propella?.runAction(rotateForever)
         
-        obsticles.spawnObsticle(node: rootNode)
+        let emptyActionNode = SCNNode()
+        
+        rootNode.addChildNode(emptyActionNode)
+        
+        let blockAction = SCNAction.run { (node) in
+            self.obsticles.spawnObsticle(node: self.rootNode)
+        }
+        
+        // wait for half a sec
+        let waitAciton = SCNAction.wait(duration: 0.5)
+        
+        let actionSequence = SCNAction.sequence([blockAction, waitAciton])
+        
+        let repeatSequence = SCNAction.repeatForever(actionSequence)
+        
+        emptyActionNode.runAction(repeatSequence)
     }
     
     // GAME LOOP

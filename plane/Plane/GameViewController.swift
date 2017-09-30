@@ -24,8 +24,31 @@ class GameViewController: UIViewController {
             view.delegate = scene
             view.isPlaying = true
             view.backgroundColor = UIColor(red: 0x8b/255.0, green: 0xf0/255.0, blue: 0xff/255.0, alpha: 1)
+            
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+            view.addGestureRecognizer(tapGesture)
         }
         
+    }
+    
+    @objc func handleTap(gestureRecognizer: UIGestureRecognizer) {
+        let p = gestureRecognizer.location(in: sceneView)
+        let hitResults = sceneView!.hitTest(p, options: nil)
+        
+        if hitResults.count > 0 {
+            let results = hitResults[0]
+            let node = results.node
+            if node.name == "obsticle" {
+                // hit some geo
+                let scaleAction = SCNAction.scale(by: 2, duration: 0.5)
+                scaleAction.timingMode = .easeInEaseOut
+                
+                let scaleDownAction = scaleAction.reversed()
+                let scaleSequence = SCNAction.sequence([scaleAction, scaleDownAction])
+                
+                node.runAction(scaleSequence)
+            }
+        }
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
