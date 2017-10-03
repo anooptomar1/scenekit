@@ -11,10 +11,22 @@ import QuartzCore
 import SceneKit
 
 class GameViewController: UIViewController {
+    
+    var sceneView: SCNView?
+    var gameScene: BirdScene?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        sceneView = self.view as? SCNView
+        gameScene = BirdScene(create: true)
+        
+        if let view = sceneView, let scene = gameScene {
+            view.scene = scene
+            view.delegate = scene
+            view.isPlaying = true
+            view.backgroundColor = UIColor(red: 0.53, green: 0.99, blue: 1, alpha: 1)
+        }
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
