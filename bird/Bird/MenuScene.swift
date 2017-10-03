@@ -1,9 +1,9 @@
 //
-//  BirdScene.swift
+//  MenuScene.swift
 //  Bird
 //
-//  Created by Ibram Uppal on 5/24/15.
-//  Copyright (c) 2015 Ibram Uppal. All rights reserved.
+//  Created by Gareth on 03.10.17.
+//  Copyright © 2017 Ibram Uppal. All rights reserved.
 //
 
 import UIKit
@@ -11,7 +11,7 @@ import QuartzCore
 import SceneKit
 
 
-class BirdScene: SCNScene, SCNSceneRendererDelegate, SCNPhysicsContactDelegate {
+class MenuScene: SCNScene, SCNSceneRendererDelegate {
     
     let emptyGrassOne = SCNNode()
     let emptyGrassTwo = SCNNode()
@@ -19,31 +19,12 @@ class BirdScene: SCNScene, SCNSceneRendererDelegate, SCNPhysicsContactDelegate {
     var timeLast: Double?
     let speedConstant = -0.7
     
-    var emptyPipeOne = SCNNode()
-    var emptyPipeTwo = SCNNode()
-    var emptyPipeThree = SCNNode()
-    var emptyPipeFour = SCNNode()
-    
     let emptyBird = SCNNode()
     var bird = SCNNode()
     
-    var rotationSequence = SCNAction()
-    
-    enum CollisionCat:Int {
-        case bird = 1
-        case pipe
-        case floor
-    }
-
     
     convenience init(create: Bool) {
         self.init()
-        
-        // 5 meteres per second
-        physicsWorld.gravity = SCNVector3(0, -4.5, 0)
-        physicsWorld.contactDelegate = self
-        
-        setBirdRotationActions()
         
         setupCameraAndLights()
         
@@ -71,25 +52,12 @@ class BirdScene: SCNScene, SCNSceneRendererDelegate, SCNPhysicsContactDelegate {
         moveGrass(node: emptyGrassOne, dt: dt)
         moveGrass(node: emptyGrassTwo, dt: dt)
         
-        movePipe(node: emptyPipeOne, dt: dt)
-        movePipe(node: emptyPipeTwo, dt: dt)
-        movePipe(node: emptyPipeThree, dt: dt)
-        movePipe(node: emptyPipeFour, dt: dt)
-        
     }
     
     func moveGrass(node: SCNNode, dt: Double) {
         node.position.x += Float(dt * speedConstant)
         if node.position.x <= -4.5 {
             node.position.x = 4.5
-        }
-    }
-    
-    func movePipe(node: SCNNode, dt: Double) {
-        node.position.x += Float(dt * speedConstant)
-        if node.position.x <= -2 {
-            node.position.x = 2
-            node.position.y = getRandomHeight()
         }
     }
     
@@ -100,22 +68,11 @@ class BirdScene: SCNScene, SCNSceneRendererDelegate, SCNPhysicsContactDelegate {
         return newHeight
     }
     
-    func setBirdRotationActions() {
-        let rotationAction = SCNAction.rotate(toAxisAngle: SCNVector4(1,0,0,0.78), duration: 0)
-        let rotationActionTwo = SCNAction.rotate(toAxisAngle: SCNVector4(1,0,0,-1.57), duration: 2)
-        rotationActionTwo.timingMode = .easeOut
-        
-        rotationSequence = SCNAction.sequence([rotationAction, rotationActionTwo])
-    }
-    
     func addItemsToScene() {
         
         if let propsScene = SCNScene(named: "art.scnassets/Props.dae") {
             
             addGrass(usingScene: propsScene)
-            
-            addPipes(usingScene: propsScene)
-            
         }
         
         addBird()
@@ -127,24 +84,17 @@ class BirdScene: SCNScene, SCNSceneRendererDelegate, SCNPhysicsContactDelegate {
             emptyBird.addChildNode(bird)
             emptyBird.scale = SCNVector3.init(easyScale: 0.08)
             emptyBird.rotation = SCNVector4(0, 1, 0, -1.57)
-            emptyBird.position = SCNVector3(-0.3, 0, 0)
+            emptyBird.position = SCNVector3(0, -0.4, 0)
             
-            // collistion is easier
-            let birdCollide = SCNSphere(radius: 0.05)
-            emptyBird.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(geometry: birdCollide, options: nil))
+            let upMove = SCNAction.move(by: SCNVector3(0,0.2,0), duration: 1)
+            let downMove = SCNAction.move(by: SCNVector3(0,-0.2,0), duration: 1)
             
-            if let body = emptyBird.physicsBody {
-                body.mass = 5
-                body.velocityFactor = SCNVector3(1,1,0)
-                body.angularVelocityFactor = SCNVector3Zero
-                body.categoryBitMask = CollisionCat.bird.rawValue
-                if #available(iOS 9.0, *) {
-                    body.contactTestBitMask = CollisionCat.floor.rawValue | CollisionCat.pipe.rawValue
-                } else {
-                    body.collisionBitMask = CollisionCat.floor.rawValue | CollisionCat.pipe.rawValue
-                }
-                
-            }
+            upMove.timingMode = .easeInEaseOut
+            downMove.timingMode = .easeInEaseOut
+            
+            let upDownSequence = SCNAction.sequence([upMove, downMove])
+            
+            emptyBird.runAction(SCNAction.repeatForever(upDownSequence))
             
             rootNode.addChildNode(emptyBird)
         }
@@ -171,54 +121,7 @@ class BirdScene: SCNScene, SCNSceneRendererDelegate, SCNPhysicsContactDelegate {
         }
     }
     
-    func addPipePhysics(toPipe pipe: SCNNode) {
-        pipe.physicsBody = SCNPhysicsBody.kinematic()
-        
-        if let body = pipe.physicsBody {
-            body.mass = 1000
-            body.categoryBitMask = CollisionCat.pipe.rawValue
-            if #available(iOS 9.0, *) {
-                body.contactTestBitMask = CollisionCat.bird.rawValue
-            } else {
-                body.collisionBitMask = CollisionCat.bird.rawValue
-            }
-        }
-    }
     
-    func addPipes(usingScene scene: SCNScene) {
-        if let pipe = scene.rootNode.childNode(withName: "Pipe", recursively: true) {
-            let topPipe = pipe.clone()
-            topPipe.rotation = SCNVector4(0,0,1,3.14)
-            topPipe.position = SCNVector3(0,13,0)
-            
-            let emptyPipe = SCNNode()
-            emptyPipe.addChildNode(pipe)
-            emptyPipe.addChildNode(topPipe)
-            
-            emptyPipe.scale = SCNVector3.init(easyScale: 0.15)
-            
-            emptyPipeOne = emptyPipe.clone()
-            emptyPipeOne.position = SCNVector3(2, getRandomHeight(), 0)
-            addPipePhysics(toPipe: emptyPipeOne)
-            
-            emptyPipeTwo = emptyPipe.clone()
-            emptyPipeTwo.position = SCNVector3(3, getRandomHeight(), 0)
-            addPipePhysics(toPipe: emptyPipeTwo)
-            
-            emptyPipeThree = emptyPipe.clone()
-            emptyPipeThree.position = SCNVector3(4, getRandomHeight(), 0)
-            addPipePhysics(toPipe: emptyPipeThree)
-            
-            emptyPipeFour = emptyPipe.clone()
-            emptyPipeFour.position = SCNVector3(5, getRandomHeight(), 0)
-            addPipePhysics(toPipe: emptyPipeFour)
-            
-            rootNode.addChildNode(emptyPipeOne)
-            rootNode.addChildNode(emptyPipeTwo)
-            rootNode.addChildNode(emptyPipeThree)
-            rootNode.addChildNode(emptyPipeFour)
-        }
-    }
     
     func setUpScenery() {
         let blockBottom = SCNBox(width: 4, height: 0.5, length: 0.4, chamferRadius: 0)
@@ -232,22 +135,6 @@ class BirdScene: SCNScene, SCNSceneRendererDelegate, SCNPhysicsContactDelegate {
         emptySand.addChildNode(bottomNode)
         emptySand.position.y = -1.63
         rootNode.addChildNode(emptySand)
-        
-        let collideFloor = SCNNode(geometry: blockBottom)
-        collideFloor.opacity = 0
-        collideFloor.physicsBody = SCNPhysicsBody.kinematic()
-        if let floorBody = collideFloor.physicsBody {
-            floorBody.mass = 1000
-            floorBody.categoryBitMask = CollisionCat.floor.rawValue
-            if #available(iOS 9.0, *) {
-                floorBody.contactTestBitMask = CollisionCat.bird.rawValue
-            } else {
-                floorBody.collisionBitMask = CollisionCat.bird.rawValue
-            }
-        }
-        collideFloor.position.y = -1.36
-        
-        rootNode.addChildNode(collideFloor)
     }
     
     func setupCameraAndLights() {
@@ -291,8 +178,9 @@ class BirdScene: SCNScene, SCNSceneRendererDelegate, SCNPhysicsContactDelegate {
         rootNode.addChildNode(ambiLight)
         
     }
-
-
+    
+    
 }
+
 
 
