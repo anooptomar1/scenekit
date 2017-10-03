@@ -19,10 +19,12 @@ class GalaxyScene: SCNScene {
         
         let sun = SCNSphere(radius: 1)
         let sunColor = UIColor(red: 1, green: 0xd0/255.0, blue: 0x15/255.0, alpha: 1)
-        sun.firstMaterial!.diffuse.contents = sunColor
-        sun.firstMaterial!.normal.contents = #imageLiteral(resourceName: "Ground")
-        sun.firstMaterial!.specular.contents = UIColor.black
-        sun.firstMaterial!.emission.contents = sunColor
+        if let sunMat = sun.firstMaterial {
+            sunMat.diffuse.contents = sunColor
+            sunMat.normal.contents = #imageLiteral(resourceName: "Ground")
+            sunMat.specular.contents = UIColor.black
+            sunMat.emission.contents = sunColor
+        }
         
         let sunLight = SCNLight()
         sunLight.type = .omni
@@ -39,6 +41,68 @@ class GalaxyScene: SCNScene {
         
         sunNode.runAction(SCNAction.repeatForever(SCNAction.rotate(by: CGFloat(Double.pi * 2), around: SCNVector3(0,1,0), duration: 60)))
         
+        // add particle systems from file for the sun
+        if let particleSun = SCNParticleSystem(named: "sunBurst.scnp", inDirectory: "") {
+            sunNode.addParticleSystem(particleSun)
+        }
+        
+        
+        if let particleStars = SCNParticleSystem(named: "starDust.scnp", inDirectory: "") {
+            rootNode.addParticleSystem(particleStars)
+        }
+        
+        let planetX = SCNSphere(radius: 0.2)
+        if let matPlanet = planetX.firstMaterial {
+            matPlanet.diffuse.contents = UIColor.red
+            matPlanet.normal.contents = #imageLiteral(resourceName: "Ground")
+            matPlanet.specular.contents = UIColor.white
+        }
+        
+        
+        let planetXNode = SCNNode(geometry:planetX)
+        let emptyPlanetAttach = SCNNode()
+        emptyPlanetAttach.pivot = SCNMatrix4MakeTranslation(0, 0, -2)
+        emptyPlanetAttach.addChildNode(planetXNode)
+        
+        rootNode.addChildNode(emptyPlanetAttach)
+        
+        emptyPlanetAttach.runAction(SCNAction.repeatForever(SCNAction.rotate(by: CGFloat(Double.pi * 2), around: SCNVector3(1,1,0), duration: 10)))
+        planetXNode.runAction(SCNAction.repeatForever(SCNAction.rotate(by: CGFloat(Double.pi * 2), around: SCNVector3(1,1,0), duration: 2)))
+        
+        let planetXMoon = SCNSphere(radius: 0.05)
+        if let matMoon = planetXMoon.firstMaterial {
+            matMoon.diffuse.contents = UIColor.white
+            matMoon.normal.contents = #imageLiteral(resourceName: "Ground")
+            matMoon.specular.contents = UIColor.white
+        }
+        let moonNode = SCNNode(geometry: planetXMoon)
+        moonNode.pivot = SCNMatrix4MakeTranslation(0, 0, -0.25)
+        
+        emptyPlanetAttach.addChildNode(moonNode)
+        moonNode.runAction(SCNAction.repeatForever(SCNAction.rotate(by: CGFloat(Double.pi * 2), around: SCNVector3(0,1,0), duration: 1)))
+        
+        
+        // Programatic way to create a particle system
+        let myParticleSystem = SCNParticleSystem()
+        myParticleSystem.particleImage = #imageLiteral(resourceName: "pixelBlock")
+        myParticleSystem.particleSize = 0.005
+        myParticleSystem.particleSizeVariation = 0.01
+        // default is no angle veriation
+        myParticleSystem.particleAngleVariation = 360
+        myParticleSystem.particleLifeSpan = 5
+        // what shape of the emiiter
+        myParticleSystem.emitterShape = SCNSphere(radius: 0.05)
+        myParticleSystem.loops = true
+        // how fast
+        myParticleSystem.birthRate = 300
+        myParticleSystem.acceleration = SCNVector3(0,0,0)
+        
+//        myParticleSystem.isLocal = true
+        
+        // as if has already been emmiting for x seconds
+//        myParticleSystem.warmupDuration = 20
+        
+        moonNode.addParticleSystem(myParticleSystem)
     }
     
     func setupCameraAndLights() {
@@ -48,6 +112,8 @@ class GalaxyScene: SCNScene {
         cameraNode.camera!.usesOrthographicProjection = false
         cameraNode.position = SCNVector3(x: 0, y: 0, z: 0)
         cameraNode.pivot = SCNMatrix4MakeTranslation(0, 0, -8)
+        
+        cameraNode.runAction(SCNAction.repeatForever(SCNAction.rotate(by: CGFloat(Double.pi * 2), around: SCNVector3(0,1,0), duration: 10)))
         
         self.rootNode.addChildNode(cameraNode)
         

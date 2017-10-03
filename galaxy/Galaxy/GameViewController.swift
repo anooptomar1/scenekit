@@ -22,6 +22,8 @@ class GameViewController: UIViewController {
         sceneView.scene = scene
         sceneView.backgroundColor = UIColor.black
         
+        sceneView.allowsCameraControl = true
+        
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
