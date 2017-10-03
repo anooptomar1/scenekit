@@ -18,6 +18,11 @@ class BirdScene: SCNScene, SCNSceneRendererDelegate {
     var runningUpdate = true
     var timeLast: Double?
     let speedConstant = -0.7
+    
+    var emptyPipeOne = SCNNode()
+    var emptyPipeTwo = SCNNode()
+    var emptyPipeThree = SCNNode()
+    var emptyPipeFour = SCNNode()
 
     
     convenience init(create: Bool) {
@@ -27,7 +32,7 @@ class BirdScene: SCNScene, SCNSceneRendererDelegate {
         
         setUpScenery()
         
-        addTheGrass()
+        addTheGrassAndPipes()
         
     }
     
@@ -57,7 +62,13 @@ class BirdScene: SCNScene, SCNSceneRendererDelegate {
         }
     }
     
-    func addTheGrass() {
+    func getRandomHeight() -> Float {
+        var newHeight = Float(arc4random_uniform(13))
+        newHeight /= -10.0
+        return newHeight
+    }
+    
+    func addTheGrassAndPipes() {
         emptyGrassOne.scale = SCNVector3.init(easyScale: 0.15)
         emptyGrassOne.position = SCNVector3(4.5, -1.3, 0)
         
@@ -77,6 +88,19 @@ class BirdScene: SCNScene, SCNSceneRendererDelegate {
                 rootNode.addChildNode(emptyGrassTwo)
             }
             
+            if let pipe = propsScene.rootNode.childNode(withName: "Pipe", recursively: true) {
+                let topPipe = pipe.clone()
+                topPipe.rotation = SCNVector4(0,0,1,3.14)
+                topPipe.position = SCNVector3(0,13,0)
+                
+                let emptyPipe = SCNNode()
+                emptyPipe.addChildNode(pipe)
+                emptyPipe.addChildNode(topPipe)
+                
+                emptyPipe.scale = SCNVector3.init(easyScale: 0.15)
+                
+                emptyPipeOne = emptyPipe.clone()
+            }
         }
     }
     
